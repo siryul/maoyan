@@ -26,9 +26,9 @@ export class Movie {
   @Column()
   isClassic: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   poster: string;
 }

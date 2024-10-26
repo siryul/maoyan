@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { plainToClass, Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   Max,
   Min,
+  validate,
 } from 'class-validator';
 
 export class Movie {
@@ -34,19 +35,38 @@ export class Movie {
 
   @IsNotEmpty()
   @Type(() => Boolean)
-  public isHot: boolean;
+  public isHot: boolean = false;
 
   @IsNotEmpty()
   @Type(() => Boolean)
-  public isComing: boolean;
+  public isComing: boolean = false;
 
   @IsNotEmpty()
   @Type(() => Boolean)
-  public isClassic: boolean;
+  public isClassic: boolean = false;
 
   @Type(() => String)
   public description?: string;
 
   @Type(() => String)
   public poster?: string;
+
+  public async validateThis(skipMissingProperties = false): Promise<string[]> {
+    const valiRes = await validate(this, { skipMissingProperties });
+
+    const res: string[] = [];
+
+    valiRes.forEach((i) => {
+      i.constraints && res.push(...Object.values(i.constraints));
+    });
+
+    return res;
+  }
+
+  public static transform(m: object): Movie {
+    if (m instanceof Movie) {
+      return m;
+    }
+    return plainToClass(Movie, m);
+  }
 }
