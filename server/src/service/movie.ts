@@ -2,17 +2,14 @@ import type { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { db } from '../db';
 import { Movie as MovieModel } from '../db/movieModel';
 import { Movie as MovieEntity } from '../entities/movie';
+import { transform, validateParam } from '../decorator';
+import type { Condition } from '../types';
 
 export class Movie {
-  public static async add(m: MovieEntity): Promise<string[] | InsertResult> {
-    // 转换平面对象
-    m = MovieEntity.transform(m);
-    // 验证
-    const err = await m.validateThis();
-    if (err.length > 0) {
-      return err;
-    }
-    // 数据库操作
+  @validateParam(MovieEntity)
+  public static async add(
+    @transform m: object
+  ): Promise<string[] | InsertResult> {
     return await db
       .createQueryBuilder()
       .insert()
@@ -21,17 +18,11 @@ export class Movie {
       .execute();
   }
 
+  @validateParam(MovieEntity, true)
   public static async update(
     id: number,
-    m: object
+    @transform m: object
   ): Promise<string[] | UpdateResult> {
-    const temp = MovieEntity.transform(m);
-    const err = await temp.validateThis(true);
-
-    if (err.length) {
-      return err;
-    }
-
     return await db
       .createQueryBuilder()
       .update(MovieModel)
@@ -55,5 +46,14 @@ export class Movie {
       .createQueryBuilder()
       .where('id=:id', { id })
       .getOne();
+  }
+
+  public static async find(
+    condition: Condition
+  ): Promise<{ count: number; movies: MovieModel[] }> {
+    return {
+      count: 0,
+      movies: [],
+    };
   }
 }

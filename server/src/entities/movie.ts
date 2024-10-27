@@ -50,23 +50,4 @@ export class Movie {
 
   @Type(() => String)
   public poster?: string;
-
-  public async validateThis(skipMissingProperties = false): Promise<string[]> {
-    const valiRes = await validate(this, { skipMissingProperties });
-
-    const res: string[] = [];
-
-    valiRes.forEach((i) => {
-      i.constraints && res.push(...Object.values(i.constraints));
-    });
-
-    return res;
-  }
-
-  public static transform(m: object): Movie {
-    if (m instanceof Movie) {
-      return m;
-    }
-    return plainToClass(Movie, m);
-  }
 }

@@ -13,7 +13,12 @@ db.initialize().then(() => {
   movie.time = 23;
 
   movie.name = 'liulangdiqiu';
-  // MovieServ.add(movie).then((res) => {
+  // MovieServ.add({
+  //   name: 'ljfksla',
+  //   types: ['fajkfs'],
+  //   areas: ['fjklfs'],
+  //   time: 32,
+  // }).then((res) => {
   //   console.log(res);
   // });
   // MovieServ.update(1, {
@@ -24,7 +29,7 @@ db.initialize().then(() => {
   // MovieServ.delete(2).then((res) => {
   //   console.log(res);
   // });
-  MovieServ.findById(2).then((res) => {
+  MovieServ.findById(1).then((res) => {
     console.log(res);
   });
 });
