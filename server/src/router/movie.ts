@@ -13,6 +13,11 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.get('/', async (req, res, next) => {
+  const result = await Movie.find({ where: req.query });
+  ResponseHelper.sendPageData(result, res);
+});
+
 router.post('/', async (req, res, next) => {
   const result = await Movie.add(req.body);
   if (Array.isArray(result)) {
