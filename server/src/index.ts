@@ -29,7 +29,14 @@ db.initialize().then(() => {
   // MovieServ.delete(2).then((res) => {
   //   console.log(res);
   // });
-  MovieServ.findById(1).then((res) => {
+  // MovieServ.findById(1).then((res) => {
+  //   console.log(res);
+  // });
+  MovieServ.find({
+    where: {
+      isHot: false,
+    },
+  }).then((res) => {
     console.log(res);
   });
 });

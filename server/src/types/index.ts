@@ -1,11 +1,13 @@
 import { IsInt, Min } from 'class-validator';
+import type { Movie } from '../db/movieModel';
 
-export class Condition {
+export abstract class Condition {
   @IsInt()
   @Min(0)
-  offset: number = 0;
+  offset?: number = 0;
   @IsInt()
   @Min(1)
-  limit: number = 10;
-  where: string;
+  limit?: number = 10;
+
+  where?: Partial<Movie> = {};
 }

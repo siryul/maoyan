@@ -48,12 +48,32 @@ export class Movie {
       .getOne();
   }
 
-  public static async find(
-    condition: Condition
-  ): Promise<{ count: number; movies: MovieModel[] }> {
-    return {
-      count: 0,
-      movies: [],
-    };
+  public static async find({
+    offset = 0,
+    limit = 10,
+    where,
+  }: Condition): Promise<{
+    total: number;
+    movies: MovieModel[];
+  }> {
+    let whereSeq: string[] = [];
+
+    where &&
+      Object.keys(where).forEach((k) => {
+        whereSeq.push(`${k} = :${k}`);
+      });
+
+    const queryBuilder = db
+      .getRepository(MovieModel)
+      .createQueryBuilder()
+      .where(whereSeq.join(' AND '), where);
+
+    const movies = await queryBuilder
+      .skip(offset * limit)
+      .take(limit)
+      .getMany();
+    const total = await queryBuilder.getCount();
+
+    return { total, movies };
   }
 }
