@@ -3,7 +3,7 @@ import { db } from '../db';
 import { Movie as MovieModel } from '../db/movieModel';
 import { Movie as MovieEntity } from '../entities/movie';
 import { transform, validateParam } from '../decorator';
-import type { Condition } from '../types';
+import type { Condition, IResult } from '../types';
 
 export class Movie {
   @validateParam(MovieEntity)
@@ -52,10 +52,7 @@ export class Movie {
     offset = 0,
     limit = 10,
     where,
-  }: Condition): Promise<{
-    total: number;
-    movies: MovieModel[];
-  }> {
+  }: Condition): Promise<IResult<MovieModel>> {
     let whereSeq: string[] = [];
 
     where &&
@@ -74,6 +71,6 @@ export class Movie {
       .getMany();
     const total = await queryBuilder.getCount();
 
-    return { total, movies };
+    return { total, data: movies };
   }
 }

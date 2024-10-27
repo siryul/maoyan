@@ -11,3 +11,8 @@ export abstract class Condition {
 
   where?: Partial<Movie> = {};
 }
+
+export interface IResult<T> {
+  total: number;
+  data: T[];
+}

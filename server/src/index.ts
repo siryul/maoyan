@@ -1,42 +1,19 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import { db } from './db';
-import { Movie } from './entities/movie';
-import { Movie as MovieServ } from './service/movie';
+import Express from 'express';
+import MovieRouter from './router/movie';
 
 db.initialize().then(() => {
-  console.log('connected');
-  const movie: Movie = new Movie();
-  movie.name = 'fsjkfd';
-  movie.types = ['dajkf'];
-  movie.areas = ['fsjkfs'];
-  movie.time = 23;
+  console.log('db connected!');
+});
 
-  movie.name = 'liulangdiqiu';
-  // MovieServ.add({
-  //   name: 'ljfksla',
-  //   types: ['fajkfs'],
-  //   areas: ['fjklfs'],
-  //   time: 32,
-  // }).then((res) => {
-  //   console.log(res);
-  // });
-  // MovieServ.update(1, {
-  //   name: '流浪地球',
-  // }).then((res) => {
-  //   console.log(res);
-  // });
-  // MovieServ.delete(2).then((res) => {
-  //   console.log(res);
-  // });
-  // MovieServ.findById(1).then((res) => {
-  //   console.log(res);
-  // });
-  MovieServ.find({
-    where: {
-      isHot: false,
-    },
-  }).then((res) => {
-    console.log(res);
-  });
+const app = Express();
+
+app.use(Express.json());
+
+app.use('/api/movie', MovieRouter);
+
+app.listen(3000, () => {
+  console.log('App listen http://localhost:3000');
 });
