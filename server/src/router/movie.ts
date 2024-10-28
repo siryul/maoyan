@@ -1,6 +1,8 @@
 import Express from 'express';
 import { Movie } from '../service/movie';
 import { ResponseHelper } from './responseHelper';
+import type { Condition } from '../types';
+import { log } from 'console';
 
 const router = Express.Router();
 
@@ -14,7 +16,21 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.get('/', async (req, res, next) => {
-  const result = await Movie.find({ where: req.query });
+  const { offset, limit } = req.query;
+
+  const condition: Condition = {};
+
+  if (offset) {
+    condition.offset = +offset;
+    delete req.query.offset;
+  }
+  if (limit) {
+    condition.limit = +limit;
+    delete req.query.limit;
+  }
+  Object.assign(condition, { where: req.query });
+
+  const result = await Movie.find(condition);
   ResponseHelper.sendPageData(result, res);
 });
 
