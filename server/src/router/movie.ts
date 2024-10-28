@@ -1,8 +1,7 @@
 import Express from 'express';
 import { Movie } from '../service/movie';
 import { ResponseHelper } from './responseHelper';
-import type { Condition } from '../types';
-import { log } from 'console';
+import { Condition } from '../types';
 
 const router = Express.Router();
 
